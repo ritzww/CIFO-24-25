@@ -12,9 +12,12 @@ from utils import Solution
 class WeddingSolution(Solution):
     def __init__(
         self,
-        scores: pd.DataFrame | np.ndarray = scores,
+        scores: pd.DataFrame | np.ndarray = None, #Before: np.ndarray='scores' doesn't work because it's not globally defined
         repr: list = None,
     ):
+        if scores is None:
+            raise ValueError("Must provide the scores matrix.")
+
         
         if repr:
             repr = self._validate_repr(repr)
@@ -22,8 +25,7 @@ class WeddingSolution(Solution):
         self.scores = self._convert_scores(scores)
         
         super().__init__(repr=repr)
-    
-    
+
     def __repr__(self):
         repr_str = ""
         for idx, table in enumerate(self.repr, start=1):
@@ -76,14 +78,18 @@ class WeddingSolution(Solution):
 # 3. Wedding Genetic Algorithm
 # --------------------------------------------------------------------------------------------
 
+
 class WeddingGeneticAlgorithm(WeddingSolution):
     def __init__(
         self, 
         mutation_function,
         crossover_function,
         repr=None, 
-        scores: pd.DataFrame | np.ndarray = scores,
+        scores: pd.DataFrame | np.ndarray = None, # Before: np.ndarray=scores, can't read it before it's defined
     ):
+        if scores is None:
+            raise ValueError("Scores matrix must be provided")
+        
         super().__init__(
             repr=repr,
             scores=scores,
@@ -91,6 +97,7 @@ class WeddingGeneticAlgorithm(WeddingSolution):
         
         self.mutation_function = mutation_function
         self.crossover_function = crossover_function
+
         
     def mutation(self, mut_prob):
         new_repr = self.mutation_function(self.repr, mut_prob)
