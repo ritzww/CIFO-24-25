@@ -5,6 +5,8 @@ import pandas as pd
 from copy import deepcopy
 from utils import Solution 
 
+from itertools import combinations
+
 # --------------------------------------------------------------------------------------------
 # 2. Wedding Solution Representation
 # --------------------------------------------------------------------------------------------
@@ -65,13 +67,23 @@ class WeddingSolution(Solution):
         return representation
      
      
+    # def fitness(self):
+    #     total_score = 0
+    #     for table in self.repr: 
+    #         for i in range(len(table)):
+    #             for j in range(i+1, len(table)):
+    #                 # only considers the upper triangle of the scores
+    #                 total_score += self.scores[table[i]-1][table[j]-1]
+    #     return total_score
+    
+
+    # Este é mais claro
     def fitness(self):
         total_score = 0
         for table in self.repr: 
-            for i in range(len(table)):
-                for j in range(i+1, len(table)):
-                    # only considers the upper triangle of the scores
-                    total_score += self.scores[table[i]-1][table[j]-1]
+            # Generate all unique pairs of guests at the table, note that (i,j)=(j,i)
+            for i, j in combinations(table, 2): # get the relationship score for each pair
+                total_score += self.scores[i-1][j-1]
         return total_score
     
 # --------------------------------------------------------------------------------------------
