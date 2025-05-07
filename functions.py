@@ -214,6 +214,23 @@ def rank_selection(population: list[Solution], function, maximization: bool,l=0.
 # 4.3 Tournament selection
 # --------------------------------------------------------------------------------------------
 
+def tournament_selection(population: list[Solution], k, maximization: bool, replacement:bool):
+    if k >= len(population):
+        raise ValueError("Tournament size k must be smaller than the population size")
+    
+    if replacement:
+        tournament_group = random.choices(population, k=k)
+    else:
+        tournament_group = random.sample(population, k=k)
+    
+    if maximization:
+        winner = max(tournament_group, key=lambda ind: ind.fitness())
+    else:
+        winner = min(tournament_group, key=lambda ind: ind.fitness())
+
+    return deepcopy(winner)
+
+
 # --------------------------------------------------------------------------------------------
 # 4.4 Another one
 # --------------------------------------------------------------------------------------------
