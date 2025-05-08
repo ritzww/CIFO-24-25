@@ -85,27 +85,20 @@ mut
 
 
 
-def inversion_mutation(representation, mut_prob):
-    if random.random() < mut_prob:
-        # Flatten the 2D seating list into a 1D list
-        flat = [guest for table in representation for guest in table]
+def inversion_mutation(representation):
+    # Flatten 2D seating into 1D list
+    flat = [guest for table in representation for guest in table]
 
-        # Exclude begin-of-table indices (0, 7, 15, ..., 63)
-        invalid_starts = set(range(0, 64, 8))
-        
-        while True:
-            i, j = sorted(random.sample(range(64), 2))
-            if (i not in invalid_starts) and (j - i > 8) and (j - i < 16):
-                break
-        
-        flat[i:j+1] = flat[i:j+1][::-1]
+    # Pick two random positions to define the inversion segment
+    i, j = sorted(random.sample(range(64), 2))
 
-        # Reconstruct 8 tables of 8 guests each
-        new_repr = [flat[i:i + 8] for i in range(0, 64, 8)]
+    # Reverse the segment
+    flat[i:j+1] = flat[i:j+1][::-1]
 
-        return new_repr
+    # Reconstruct 8 tables of 8 guests each
+    new_repr = [flat[k:k + 8] for k in range(0, 64, 8)]
 
-    return representation
+    return new_repr
 
 mut = inversion_mutation(rep1, 1)
 mut
@@ -124,7 +117,7 @@ def scramble_mutation(representation, mut_prob):
         flat = [guest for table in representation for guest in table]
         
         # Define the weights for the scramble size (higher weights for smaller sizes)
-        weights = [1 / (i**3) for i in range(2, 64)] 
+        weights = [1 / (i + 1) for i in range(2, 64)] 
         scramble_size = random.choices(range(2, 64), weights=weights, k=1)[0]
         
         # Select random subset of indices to scramble
