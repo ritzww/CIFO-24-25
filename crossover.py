@@ -300,6 +300,19 @@ Maps: (4 - 3), (5 - 8), (6 - 7)
     
 """
 
+def has_duplicates(seating):
+    """
+    Checks if a seating arrangement has duplicate guests.
+
+    Args:
+        seating (list[list[int]]): A list of 8 tables, each with 8 guest IDs.
+
+    Returns:
+        bool: True if there are duplicates, False otherwise.
+    """
+    flat = [guest for table in seating for guest in table]
+    return len(flat) != len(set(flat))
+
 def partially_mapped_crossover(rep1, rep2):
     parent1_flat = [guest for table in rep1 for guest in table]
     parent2_flat = [guest for table in rep2 for guest in table]
@@ -316,7 +329,14 @@ def partially_mapped_crossover(rep1, rep2):
     # Create mappings for each child 
     mapping1 = {parent2_flat[i]: parent1_flat[i] for i in range(start, end+1)}
     mapping2 = {parent1_flat[i]: parent2_flat[i] for i in range(start, end+1)}
-
+    
+    def resolve_conflict(val, child_window, mapping):
+        # Recursively resolve mapped values until no conflict
+        while val in child_window:
+            val = mapping[val]
+        # Exists loop when the value in the mapping is not in the child window 
+        return val
+    
     # Fill in remaining positions
     for i in range(64):
         if i < start or i > end:
@@ -325,19 +345,22 @@ def partially_mapped_crossover(rep1, rep2):
             if val1 not in child1:
                 child1[i] = val1
             else:
-                child1[i] = mapping1[val1]
+                child1[i] = resolve_conflict(val1, child1[start:end+1], mapping1)
 
             # For child2
             val2 = parent2_flat[i]
             if val2 not in child2:
                 child2[i] = val2
             else:
-                child2[i] = mapping2[val2]
+                child2[i] = resolve_conflict(val2, child2[start:end+1], mapping2)
 
     # Reshape into 8x8 tables
     offspring1 = [child1[i:i+8] for i in range(0, 64, 8)]
     offspring2 = [child2[i:i+8] for i in range(0, 64, 8)]
-
+    
+    if has_duplicates(offspring1) or has_duplicates(offspring2):
+        raise ValueError("Invalid offspring — duplicates or missing guests!")
+    
     return offspring1, offspring2
 
 # off1, off2 = partially_mapped_crossover(rep1, rep2)

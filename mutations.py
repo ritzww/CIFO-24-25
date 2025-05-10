@@ -85,20 +85,22 @@ mut
 
 
 
-def inversion_mutation(representation):
-    # Flatten 2D seating into 1D list
-    flat = [guest for table in representation for guest in table]
+def inversion_mutation(representation, mut_prob):
+    if random.random() < mut_prob:
+        # Flatten 2D seating into 1D list
+        flat = [guest for table in representation for guest in table]
 
-    # Pick two random positions to define the inversion segment
-    i, j = sorted(random.sample(range(64), 2))
+        # Pick two random positions to define the inversion segment
+        i, j = sorted(random.sample(range(64), 2))
 
-    # Reverse the segment
-    flat[i:j+1] = flat[i:j+1][::-1]
+        # Reverse the segment
+        flat[i:j+1] = flat[i:j+1][::-1]
 
-    # Reconstruct 8 tables of 8 guests each
-    new_repr = [flat[k:k + 8] for k in range(0, 64, 8)]
+        # Reconstruct 8 tables of 8 guests each
+        new_repr = [flat[k:k + 8] for k in range(0, 64, 8)]
 
-    return new_repr
+        return new_repr
+    return representation
 
 mut = inversion_mutation(rep1, 1)
 mut
