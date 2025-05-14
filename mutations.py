@@ -10,25 +10,27 @@ from copy import deepcopy
 # ----------------------------------------------------------
 
 rep1 = [
-    [0, 1, 2, 3, 4, 5, 6, 7],
-    [8, 9, 10, 11, 12, 13, 14, 15],
-    [16, 17, 18, 19, 20, 21, 22, 23],
-    [24, 25, 26, 27, 28, 29, 30, 31],
-    [32, 33, 34, 35, 36, 37, 38, 39],
-    [40, 41, 42, 43, 44, 45, 46, 47],
-    [48, 49, 50, 51, 52, 53, 54, 55],
-    [56, 57, 58, 59, 60, 61, 62, 63],
+    [1, 2, 3, 4, 5, 6, 7, 8],
+    [9, 10, 11, 12, 13, 14, 15, 16],
+    [17, 18, 19, 20, 21, 22, 23, 24],
+    [25, 26, 27, 28, 29, 30, 31, 32],
+    [33, 34, 35, 36, 37, 38, 39, 40],
+    [41, 42, 43, 44, 45, 46, 47, 48],
+    [49, 50, 51, 52, 53, 54, 55, 56],
+    [57, 58, 59, 60, 61, 62, 63, 64],
 ]
+
 rep2 = [
-    [63, 62, 61, 60, 59, 58, 57, 56],
-    [55, 54, 53, 52, 51, 50, 49, 48],
-    [47, 46, 45, 44, 43, 42, 41, 40],
-    [39, 38, 37, 36, 35, 34, 33, 32],
-    [31, 30, 29, 28, 27, 26, 25, 24],
-    [23, 22, 21, 20, 19, 18, 17, 16],
-    [15, 14, 13, 12, 11, 10, 9, 8],
-    [7, 6, 5, 4, 3, 2, 1, 0],
+    [64, 63, 62, 61, 60, 59, 58, 57],
+    [56, 55, 54, 53, 52, 51, 50, 49],
+    [48, 47, 46, 45, 44, 43, 42, 41],
+    [40, 39, 38, 37, 36, 35, 34, 33],
+    [32, 31, 30, 29, 28, 27, 26, 25],
+    [24, 23, 22, 21, 20, 19, 18, 17],
+    [16, 15, 14, 13, 12, 11, 10, 9],
+    [8, 7, 6, 5, 4, 3, 2, 1],
 ]
+
 
 
 def swap_mutation(representation, mut_prob):
@@ -37,10 +39,11 @@ def swap_mutation(representation, mut_prob):
     """
     if random.random() <= mut_prob:
         new_repr = deepcopy(representation)
-        table1_idx = random.randint(0, 7)
-        table2_idx = random.randint(0, 7)
-        
-        person1_idx = random.randint(0, 7)
+        # This ensures that table1_idx != table2_idx
+        table1_idx, table2_idx = random.sample(range(0,7), 2)
+
+        #These indices can be equal        
+        person1_idx = random.randint(0, 7) 
         person2_idx = random.randint(0, 7)
         
         new_repr[table1_idx][person1_idx], new_repr[table2_idx][person2_idx] = (
@@ -50,6 +53,7 @@ def swap_mutation(representation, mut_prob):
         return new_repr
     return representation
 
+
 mut = swap_mutation(rep1, 1)
 mut
 len(mut)
@@ -58,27 +62,26 @@ len(mut)
 
 def insert_mutation(representation, mut_prob):
     if random.random() < mut_prob:
-        # Flatten the list (8x8 → 64)
-        # No need for deepcopy as we are creating already a new flattened list
+        # Flatten the matrix into 1D list
         flat = [guest for table in representation for guest in table]
 
-        # Pick two unique indices
-        while True:
-            idx1, idx2 = sorted(random.sample(range(64), 2))
-            if idx1 != idx2:
-                break 
-
-        # Remove guest at idx2 and insert it after idx1
+        # This picks two different indices
+        idx1, idx2 = random.sample(range(64), 2)
         guest = flat.pop(idx2)
+
+        # Adjust idx1 if idx2<idx1
+        if idx2 < idx1:
+            idx1 -= 1
+
         flat.insert(idx1 + 1, guest)
 
-        # Reconstruct into 8 tables (list of lists)
-        new_repr = [flat[i:i + 8] for i in range(0, 64, 8)]
 
+        # Reconstruct into 8x8 matrix
+        new_repr = [flat[i:i + 8] for i in range(0, 64, 8)]
 
         return new_repr
     
-    return representation
+    return representation # if mutation doesn't occur it returns the original arrangement
 
 mut = insert_mutation(rep1, 1)
 mut
