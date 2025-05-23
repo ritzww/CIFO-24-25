@@ -206,22 +206,3 @@ class Wedding_HC_Solution(Wedding_Solution):
         return neighbors
     
         
-df = pd.read_csv("seating_data(in).csv")
-
-df.to_numpy()
-
-sol = Wedding_Solution(scores=df.to_numpy())
-
-sol
-
-sol = Wedding_HC_Solution(scores=df.to_numpy())
-
-n = sol.get_neighbors()
-
-# neig_len = []
-# for _ in range(1000):
-#     sol = Wedding_HC_Solution(scores=df.to_numpy())
-#     n = sol.get_neighbors()
-#     neig_len.append(len(n))
-
-#set(neig_len)
