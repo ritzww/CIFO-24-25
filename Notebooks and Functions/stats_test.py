@@ -77,10 +77,8 @@ def mann_whitney_u_test(group1, group2, alpha=0.01):
 # PLOT DUNN'S TEST
 def plot_dunn_results(dunn_results,n_decimals=4,shrink=0.7,figsize=(20, 20)):
 
-    # Create mask for upper triangle to hide it in heatmap
     mask = np.triu(np.ones_like(dunn_results, dtype=bool))
 
-    # Plot the heatmap with only lower triangle shown
     plt.figure(figsize=figsize)
     sns.heatmap(dunn_results, 
                 mask=mask,
@@ -90,7 +88,8 @@ def plot_dunn_results(dunn_results,n_decimals=4,shrink=0.7,figsize=(20, 20)):
                 cbar_kws={'label': 'p-value', 'shrink': shrink},
                 linewidths=0.5, 
                 linecolor='gray',
-                square=True)
+                square=True,
+                center=0.1)
 
     plt.title("Dunn's Post-Hoc Test P-values (Holm-adjusted)", fontsize=16)
     plt.xlabel("Configuration")
