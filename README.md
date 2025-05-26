@@ -9,7 +9,7 @@ Each solution represents a complete seating arrangement, specifying which guests
 
 Apart from implementing the Genetic Algorithm to solve this problem, we also implemented Simmulated Annealing Algorithm and Hill Climbing. 
 
-<h2>Group members</h2>
+**Group members**
 - Gaspar Pereira, 20230984
 - Maria Cruz, 20240760
 - Ricardo Pereira, 20240745
