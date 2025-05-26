@@ -2,18 +2,16 @@ from abc import ABC, abstractmethod
 import random
 from copy import deepcopy
 from typing import Callable
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from crossover import *
-from mutations import *
+from functions.crossover import *
+from functions.mutations import *
 
 
 
 class Solution(ABC):
-    
     def __init__(self, repr=None):
         # To initialize a solution we need to know it's representation. If no representation is given, a solution is randomly initialized.
         if repr is None:
@@ -37,7 +35,6 @@ class Solution(ABC):
 
 
 class Wedding_Solution(Solution):
-    
     def __init__(
         self,
         scores: pd.DataFrame | np.ndarray,
@@ -50,37 +47,6 @@ class Wedding_Solution(Solution):
         self.scores = self._convert_scores(scores)
         
         super().__init__(repr=repr)
-    
-    
-    def __repr__(self):
-        
-        repr_str = ""
-        for idx, table in enumerate(self.repr, start=1):
-            repr_str += f"\nTable {idx}: {table}"
-        return repr_str
-    
-    
-    def _validate_repr(self, repr):
-        
-        if isinstance(repr, np.ndarray) and len(repr) != 8:
-            raise ValueError("Representation must be a list of 8 tables")
-        # if not all(isinstance(table, list) for table in repr):
-        #     raise TypeError("Each table must be a list")
-        # if not all(all(isinstance(person, int) for person in table) for table in repr):
-        #     raise TypeError("Each person in the table must be an integer")
-        if not all(len(table) == 8 for table in repr):
-            raise ValueError("Each table must have 8 people")
-        return repr
-    
-    
-    def _convert_scores(self, scores):
-        
-        if isinstance(scores, pd.DataFrame):
-            return scores.to_numpy()
-        elif isinstance(scores, np.ndarray):
-            return scores
-        else:
-            raise TypeError("Scores must be a DataFrame or a numpy array")
     
     
     def random_initial_representation(self):
@@ -105,12 +71,38 @@ class Wedding_Solution(Solution):
                     total_score += self.scores[table[i]-1][table[j]-1]
         return total_score
     
+  
+    def __repr__(self):
+        
+        repr_str = ""
+        for idx, table in enumerate(self.repr, start=1):
+            repr_str += f"\nTable {idx}: {table}"
+        return repr_str
+    
+    
+    def _validate_repr(self, repr):
+        
+        if isinstance(repr, np.ndarray) and len(repr) != 8:
+            raise ValueError("Representation must be a list of 8 tables")
 
-
+        if not all(len(table) == 8 for table in repr):
+            raise ValueError("Each table must have 8 people")
+        
+        return repr
+    
+    
+    def _convert_scores(self, scores):
+        
+        if isinstance(scores, pd.DataFrame):
+            return scores.to_numpy()
+        elif isinstance(scores, np.ndarray):
+            return scores
+        else:
+            raise TypeError("Scores must be a DataFrame or a numpy array")
+    
 
 
 class Wedding_GA_Solution(Wedding_Solution):
-    
     def __init__(
         self, 
         mutation_function,
@@ -162,7 +154,6 @@ class Wedding_GA_Solution(Wedding_Solution):
 
 
 class Wedding_SimulatedAnnealing_Solution(Wedding_Solution):
-    
     def get_random_neighbor(self, neighbor_operator: Callable):
         
         neighbor = deepcopy(self.repr)
@@ -177,17 +168,8 @@ class Wedding_SimulatedAnnealing_Solution(Wedding_Solution):
         )
         
 
-"""
 
 
-$$
-\binom{8}{2} \times 8 \times 8 = 28 \times 64 = 1792
-$$
-
-From 8 tables pick 2; each table 8 guests can be swapped with another 8 guests from another table.
-
-
-"""
 
 
 class Wedding_HC_Solution(Wedding_Solution):
@@ -205,4 +187,4 @@ class Wedding_HC_Solution(Wedding_Solution):
                         )
         return neighbors
     
-        
+
