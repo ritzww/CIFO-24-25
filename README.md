@@ -1,4 +1,5 @@
 <h1>Wedding Seating Optimization Project</h1>
+Project developed during Computaitonal Intelligence for Optimization class (2024/2025 NOVA IMS)
 
 <h3>Project Description</h3>
 The goal of this project is to optimize seating arrangement of guests across tables to maximize guest happiness and minimize conflicts based on their relationships.
