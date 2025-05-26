@@ -14,3 +14,4 @@ Apart from implementing the Genetic Algorithm to solve this problem, we also imp
 - Maria Cruz, 20240760
 - Ricardo Pereira, 20240745
 - Rita Wang, 20240551
+
