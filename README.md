@@ -1,6 +1,5 @@
 <h1>Wedding Seating Optimization Project</h1>
 
-<h2>Project Description</h2>
 The goal of this project is to optimize seating arrangement of guests across tables to maximize guest happiness and minimize conflicts based on their relationships.
 
 Each solution represents a complete seating arrangement, specifying which guests are seated at each table. These are the constraints that must be verified in every solution of the search space (no object is considered a solution if it doesn’t comply with these):
